@@ -82,7 +82,7 @@ int main()
                 cout<<"\n\tOpcion no valida...\n\n";
                 break;
         }
-    }while(opc!=4);
+    }while(opc!=4); //este es el menu...
 
 
     return 0;
@@ -91,16 +91,16 @@ int main()
 void procesa(int i, int j, vector<Stack<int>*>& arreglo)
 {
     int n = arreglo.size();
-    if(0 <= abs(i) <= n)
+    if(0 <= abs(i) <= n) // si el valor absoluto de i es mayor o igual que cero y menor o igual que el numero de pilas...
     {
         if(i>0)
         {
             arreglo[i-1]->push(j);
-        }
+        } // si i > 0 insertamos j en el elemento señalado por i...
         else if(i<0)
         {
             arreglo[abs(i)-1]->pop();
-        }
+        } // si i < 0 quitamos el elemento cima de la pila |i|...
         else
         {
             for(unsigned int a=0; a<arreglo.size(); a++)
@@ -110,15 +110,15 @@ void procesa(int i, int j, vector<Stack<int>*>& arreglo)
                 else
                 {
                     Stack<int> temp(20);
-                    Stack<int>::copyStack(*arreglo[a], temp);
+                    Stack<int>::copyStack(*arreglo[a], temp); //copiamos la pila a para no afectar sus elementos
                     cout<<"La pila "<<a+1<<" contiene:"<<endl<<endl;
                     while(!temp.empty())
                     {
-                        cout<<temp.pop()<<endl;
+                        cout<<temp.pop()<<endl; //mostramos los elementos de la pila copiada
                     }
                 }
             }
-        }
+        } // aqui mostramos los elementos de todas las pilas (i = 0)...
     }
     else
     {
@@ -141,7 +141,7 @@ vector<Stack<int>*> declaraPilas(int n)
     }
 
     return arreglo;
-}
+}//funcion que declara un total de n pilas e inicializa el arreglo...
 
 void convtype(void* inp, void* out)
 {
@@ -149,4 +149,5 @@ void convtype(void* inp, void* out)
 
       isbuf.str(*(string*) inp);
       isbuf >> *((int*) out);
-}
+}//convierte una cadena a un entero
+

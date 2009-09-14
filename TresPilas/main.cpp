@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <cctype>
+#include <sstream>
 /***********************************************************
   Práctica III
   Programa que maneja un total de n=3 pilas P1,P2,P3.
@@ -15,28 +16,73 @@
 using namespace std;
 void procesa(int, int, vector<Stack<int>*>&);
 vector<Stack<int>*> declaraPilas(int);
-bool isNumeric(char*);
+void convtype(void*, void*);
 
 int main()
 {
-    int i,j,n,opc;
-    string cad;
+    int i=0,j=0,n=0,opc=0;
+    string cad = "";
+    vector<Stack<int>*> arreglo;
+    system("clear");
     do{
         cout<<"\t*****Operaciones sobre pilas*****\n\n";
-        cout<<"\t1) Definir el número de pilas.";
-        cout<<"\n\t2) Ingresar (i,j).";
-        cout<<"\n\t3) Salir.";
+        cout<<"\t1) Definir el número de pilas (n actualmente vale: "<<n<<").";
+        cout<<"\n\t2) Ingresar (i actualmente vale: "<<i<<" y j: "<<j<<").";
+        cout<<"\n\t3) Procesar.";
+        cout<<"\n\t4) Salir.";
         cout<<"\n\n\tSelecciona una opción: ";
-        cin>>opc;
+        cin>>cad;
+        convtype(&cad, &opc);
         switch(opc)
         {
             case 1:
                 system("clear");
-                cout<<"\n\tIngrese el numero de pilas (n) que desea utilizar.";
-                //cin>>
+                cout<<"\n\tIngrese el numero de pilas (n) que desea utilizar: ";
+                cin>>cad;
+                convtype(&cad, &n);
+                if(n > 0)
+                {
+                    arreglo = declaraPilas(n);
+                    system("clear");
+                }
+                else
+                {
+                    cout<<"\n\tEl numero ingresado no es valido.\n\n";
+                    n = 0;
+                }
+                break;
 
+            case 2:
+                system("clear");
+                cout<<"\n\tIngrese el valor de i: ";
+                cin>>cad;
+                convtype(&cad, &i);
+                cout<<"\n\tIngrese el valor de j: ";
+                cin>>cad;
+                convtype(&cad, &j);
+                system("clear");
+                break;
+
+            case 3:
+                system("clear");
+                if(n != 0)
+                {
+                    procesa(i,j,arreglo);
+                    if(i != 0)
+                        cout<<"\n\tProceso Exitoso!\n\n";
+                }
+                else
+                    cout<<"\n\tDebe introducir un valor para n...\n\n";
+                break;
+            case 4:
+                cout<<"\n\tHasta luego!\n\n";
+                break;
+            default:
+                system("clear");
+                cout<<"\n\tOpcion no valida...\n\n";
+                break;
         }
-    }while(opc!=9);
+    }while(opc!=4);
 
 
     return 0;
@@ -97,22 +143,10 @@ vector<Stack<int>*> declaraPilas(int n)
     return arreglo;
 }
 
-bool isNumeric(char* cStr)
+void convtype(void* inp, void* out)
 {
-    bool value;
-    int n = 0;
+  istringstream isbuf;
 
-    if(cStr[0] == '-')
-        n = 1;
-
-    while(cStr[n] != NULL)
-    {
-        if(!isdigit(cStr[n]))
-        {
-            value = false;
-            break;
-        }
-    }
-
-    return value;
+      isbuf.str(*(string*) inp);
+      isbuf >> *((int*) out);
 }

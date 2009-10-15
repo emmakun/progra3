@@ -28,6 +28,14 @@ public:
     void setApellido(const std::string&);
     void setEdad(const int&);
     void setSueldo(const float&);
+    bool operator <(Empleado emp)
+    {
+        return (this->nombre() < emp.nombre() ? true : false);
+    }
+    bool operator >(Empleado emp)
+    {
+        return (this->nombre() > emp.nombre() ? true : false);
+    }
 };
 
 #endif // EMPLEADO_H

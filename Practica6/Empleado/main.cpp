@@ -10,6 +10,7 @@ void agregarEmpleado(List<Empleado>&);
 void imprimirEmpleado(Empleado&);
 bool eliminarEmpleado(List<Empleado>&);
 bool buscarEmpleado(List<Empleado>&);
+void ordenarEmpleado(List<Empleado>&);
 
 int main()
 {
@@ -51,6 +52,8 @@ int main()
                 break;
             case 5:
                 system("clear");
+                ordenarEmpleado(lista);
+                lista.forEach(&imprimirEmpleado);
                 break;
             case 6:
                 system("clear");
@@ -68,7 +71,7 @@ int main()
 
 void printMenu()
 {
-    cout<<"Que desea hacer?"<<endl<<endl;
+    cout<<"¿Que desea hacer?"<<endl<<endl;
     cout<<"\t1) Ingresar un empleado"<<endl;
     cout<<"\t2) Mostrar los datos de todos los empleados"<<endl;
     cout<<"\t3) Eliminar un empleado"<<endl;
@@ -145,4 +148,25 @@ bool buscarEmpleado(List<Empleado>& lista)
     }
 
     return value;
+}
+
+void ordenarEmpleado(List<Empleado>& lista)
+{
+    List<Empleado> aux;
+
+    lista.getFirst();
+    while(lista.isValid())
+    {
+        aux.insert(lista.getThis());
+        lista++;
+    }
+
+    lista.~List();
+
+    aux.getFirst();
+    while(aux.isValid())
+    {
+        lista.insert(aux.getThis());
+        aux++;
+    }
 }

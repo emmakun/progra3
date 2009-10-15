@@ -1,157 +1,189 @@
 #ifndef DLIST_H
 #define DLIST_H
 
-
-//class DList {
-//public:
-//    DList();
-//};
-
 #include <iostream>
 using namespace std;
 
 #define ASC 1
 #define DESC 0
 
-template<class T> class list;
+template<class T> class List;
 
 template<class T>
-class node {
+class Node {
    public:
-    node(T v, node<T> *nxt = NULL, node<T> *prev = NULL) :
+    Node(T v, Node<T> *nxt = NULL, Node<T> *prev = NULL) :
        item(v), next(nxt), previous(prev) {}
 
    private:
     T item;
-    node<T> *next;
-    node<T> *previous;
+    Node<T> *next;
+    Node<T> *previous;
 
-   friend class list<T>;
+   friend class List<T>;
 };
 
 template<class T>
-class list {
+class List {
    public:
-    list() : plist(NULL) {}
-    ~list();
+    List() : pList(NULL) {}
+    ~List();
 
     void insert(T v);
     void remove(T v);
-    bool empty() { return plist == NULL; }
+    bool empty() { return pList == NULL; }
     void getItems(int);
     void next();
     void previous();
     void first();
     void last();
-    bool valid() { return plist != NULL; }
-    T CurrentItem() { return plist->item; }
+    bool valid() { return pList != NULL; }
+    T& CurrentItem() { return pList->item; }
+    void forEach(void (*func)(T&));
+    int count();
 
    private:
-    node<T> *plist;
+    Node<T> *pList;
 };
 
 template<class T>
-list<T>::~list()
+List<T>::~List()
 {
-   node<T> *aux;
+   Node<T> *aux;
 
    first();
-   while(plist) {
-      aux = plist;
-      plist = plist->next;
+   while(pList) {
+      aux = pList;
+      pList = pList->next;
       delete aux;
    }
 }
 
 template<class T>
-void list<T>::insert(T v)
+void List<T>::insert(T v)
 {
-   node<T> *newNode;
+   Node<T> *newNode;
 
    first();
-   // Si la list está vacía
-   if(empty() || plist->item > v) {
-      // Asignamos a list un newNode node de item v y
-      // cuyo next elemento es la list actual
-      newNode = new node<T>(v, plist);
-      if(!plist) plist = newNode;
-      else plist->previous = newNode;
+   // Si la List está vacía
+   if(empty() || pList->item > v) {
+      // Asignamos a List un newNode Node de item v y
+      // cuyo next elemento es la List actual
+      newNode = new Node<T>(v, pList);
+      if(!pList) pList = newNode;
+      else pList->previous = newNode;
    }
    else {
-      // Buscar el node de item menor a v
+      // Buscar el Node de item menor a v
       // Avanzamos hasta el último elemento o hasta que el next tenga
       // un item mayor que v
-      while(plist->next && plist->next->item <= v) next();
-      // Creamos un newNode node después del node actual
-      newNode = new node<T>(v, plist->next, plist);
-      plist->next = newNode;
+      while(pList->next && pList->next->item <= v) next();
+      // Creamos un newNode Node después del Node actual
+      newNode = new Node<T>(v, pList->next, pList);
+      pList->next = newNode;
       if(newNode->next) newNode->next->previous = newNode;
    }
 }
 
 template<class T>
-void list<T>::remove(T v)
+void List<T>::remove(T v)
 {
-   node<T> *pnode;
+   Node<T> *pNode;
 
-   pnode = plist;
-   while(pnode && pnode->item < v) pnode = pnode->next;
-   while(pnode && pnode->item > v) pnode = pnode->previous;
+   pNode = pList;
+   while(pNode && pNode->item < v) pNode = pNode->next;
+   while(pNode && pNode->item > v) pNode = pNode->previous;
 
-   if(!pnode || pnode->item != v) return;
-   // remove el node
+   if(!pNode || pNode->item != v) return;
+   // remove el Node
 
-   if(pnode->previous) // no es el primer elemento
-      pnode->previous->next = pnode->next;
-   if(pnode->next) // no el el último node
-      pnode->next->previous = pnode->previous;
+   if(pNode->previous) // no es el primer elemento
+      pNode->previous->next = pNode->next;
+   if(pNode->next) // no el el último Node
+      pNode->next->previous = pNode->previous;
 }
 
 template<class T>
-void list<T>::getItems(int orden)
+void List<T>::getItems(int orden)
 {
-   node<T> *pnode;
+   Node<T> *pNode;
    if(orden == ASC) {
       first();
-      pnode = plist;
-      while(pnode) {
-         cout << pnode->item << "-> ";
-         pnode = pnode->next;
+      pNode = pList;
+      while(pNode) {
+         cout << pNode->item << "-> ";
+         pNode = pNode->next;
       }
    }
    else {
       last();
-      pnode = plist;
-      while(pnode) {
-         cout << pnode->item << "-> ";
-         pnode = pnode->previous;
+      pNode = pList;
+      while(pNode) {
+         cout << pNode->item << "-> ";
+         pNode = pNode->previous;
       }
    }
    cout << endl;
 }
 
 template<class T>
-void list<T>::next()
+void List<T>::next()
 {
-   if(plist) plist = plist->next;
+   if(pList) pList = pList->next;
 }
 
 template<class T>
-void list<T>::previous()
+void List<T>::previous()
 {
-   if(plist) plist = plist->previous;
+   if(pList) pList = pList->previous;
 }
 
 template<class T>
-void list<T>::first()
+void List<T>::first()
 {
-   while(plist && plist->previous) plist = plist->previous;
+   while(pList && pList->previous) pList = pList->previous;
 }
 
 template<class T>
-void list<T>::last()
+void List<T>::last()
 {
-   while(plist && plist->next) plist = plist->next;
+   while(pList && pList->next) pList = pList->next;
+}
+
+// Aplicar una función a cada nodo de la lista:
+template<class T>
+void List<T>::forEach(void (*func)(T&)) {
+   first();
+   Node<T> *temp = pList;
+
+   // Recorrer la lista:
+   while(temp) {
+      // Aplicar la función:
+      func(temp->item);
+      temp = temp->next;
+   }
+}
+
+// La función "func" debe ser una plantilla de una función
+// que no retorne valor y que admita un parámetro del mismo
+// tipo que la lista:
+// template <class T>
+// void <funcion>(T d);
+
+template<class T>
+int List<T>::count()
+{
+    int i=0;
+    first();
+    Node<T> *temp = pList;
+
+    while(temp)
+    {
+        i++;
+        temp = temp->next;
+    }
+
+    return i;
 }
 
 #endif // DLIST_H

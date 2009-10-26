@@ -33,9 +33,8 @@ bool Suffix::precedence(char op1, char op2)
 string Suffix::fromInterfix(string& str)
 {
     Stack<char> stack(100);
-    //const char* str = interStr.c_str();
     string suffixStr;
-    char symbol; //, symbolTop;
+    char symbol;
 
     for(unsigned int i=0;i<str.size();i++)
     {
@@ -59,8 +58,6 @@ string Suffix::fromInterfix(string& str)
             while(!stack.empty() && (stack.getTop() != '(') && precedence(stack.getTop(), symbol))
             {
                 suffixStr += stack.pop();
-                //symbolTop = stack.pop();
-                //suffixStr += symbolTop;
             }
             stack.push(symbol);
         }
@@ -68,14 +65,12 @@ string Suffix::fromInterfix(string& str)
     while(!stack.empty())
     {
         suffixStr += stack.pop();
-//        symbolTop = stack.pop();
-//        suffixStr += symbolTop;
     }
 
     return suffixStr;
 }
 //Función que devuelve el valor que resulta de evaluar una cadena en notación sufija.
-double Suffix::evaluate(string& str) const
+double Suffix::evaluate(string& str)
 {
     Stack<int> stack(100);
     const char* suffixStr = str.c_str();

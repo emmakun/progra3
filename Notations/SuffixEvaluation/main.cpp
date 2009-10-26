@@ -12,14 +12,13 @@ using namespace std;
 
 int main()
 {
-    Suffix suffix;
     char charStr[100];
     system("clear");
     cout<<endl<<endl<<"\t* * * Evalua cadena posfija * * *"<<endl<<endl;
     cout<<"\tEscribe una cadena en notacion posfija: "<<endl<<"\t";
     cin.get(charStr,100);
     string str = charStr;
-    double res=suffix.evaluate(str);
+    double res=Suffix::evaluate(str);
     cout<<endl<<"\tResultado: "<<endl<<"\t"<<res<<endl<<endl;
     return 0;
 }

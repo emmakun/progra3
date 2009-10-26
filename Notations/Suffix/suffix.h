@@ -10,11 +10,11 @@
 #include <iostream>
 //Definición de la clase Suffix
 class Suffix {
+    static bool precedence(char, char);
 public:
     Suffix();
-    bool precedence(char, char);
-    std::string fromInterfix(std::string&);
-    double evaluate(std::string&) const;
+    static std::string fromInterfix(std::string&);
+    static double evaluate(std::string&);
 };
 
 #endif // SUFFIX_H

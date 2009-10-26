@@ -12,14 +12,13 @@ using namespace std;
 
 int main()
 {
-    Suffix suffix;
     char charStr[100];
     system("clear");
     cout<<endl<<endl<<"\t* * * Conviete de interfija a posfija * * *"<<endl<<endl;
     cout<<"\tEscribe una cadena en notacion interfija: "<<endl<<"\t";
     cin.get(charStr,100);
     string str = charStr;
-    string res=suffix.fromInterfix(str);
+    string res=Suffix::fromInterfix(str);
     cout<<endl<<"\tResultado: "<<endl<<"\t"<<res<<endl<<endl;
     return 0;
 }

@@ -1,0 +1,355 @@
+#ifndef _BSTREE_
+#define _BSTREE_
+
+#include <iostream>
+using namespace std;
+
+template<class T>
+class BSTree {
+  private:
+   //// Clase local de Lista para Node de ArbolBinario:
+   template<class T_Node>
+   class Node {
+     public:
+      // Constructor:
+      Node(const T_Node data, Node<T_Node> *lval=NULL, Node<T_Node> *rval=NULL, Node<T_Node> *pNode=NULL) :
+        item(data), left(lval), right(rval), parentNode(pNode) {}
+      // Miembros:
+      T_Node item;
+      Node<T_Node> *left;
+      Node<T_Node> *right;
+      Node<T_Node> *parentNode;
+   };
+
+   // Punteros de la lista, para cabeza y node current:
+   Node<T> *root;
+   Node<T> *current;
+   int counter;
+   int height;
+
+  public:
+   // Constructor y destructor básicos:
+   BSTree() : root(NULL), current(NULL) {}
+   ~BSTree() { prune(root); }
+   // insert en árbol ordenado:
+   void insert(const T data);
+   bool insertLeft(const T data);
+   bool insertRight(const T data);
+   // remove un elemento del árbol:
+   void remove(const T data);
+   // Función de búsqueda:
+   bool find(const T data);
+   // Comprobar si el árbol está vacío:
+   bool empty(Node<T> *r) { return r==NULL; }
+   // Comprobar si es un node hoja:
+   bool isLeaf(Node<T> *r) { return !r->right && !r->left; }
+   // Contar número de nodes:
+   const int countNodes();
+   const int treeHeight();
+   // Calcular height de un item:
+   int getHeight(const T data);
+   // Devolver referencia al item del node current:
+   T &currentItem() { return current->item; }
+   // Moverse al node root:
+   void goToRoot() { current = root; }
+   //Moverse al nodo padre
+   void goToParent(){ current = current->parentNode; }
+   // Aplicar una función a cada elemento del árbol:
+   void inOrder(void (*func)(T&) , Node<T> *node=NULL, bool r=true);
+   void preOrder(void (*func)(T&) , Node<T> *node=NULL, bool r=true);
+   void postOrder(void (*func)(T&) , Node<T> *node=NULL, bool r=true);
+   void imprimeNivel(unsigned int level, bool r = true, Node<T>* node = NULL);
+  private:
+   // Funciones auxiliares
+   void prune(Node<T>* &);
+   void auxCounter(Node<T>*);
+   void auxHeight(Node<T>*, int);
+};
+
+// Poda: borrar todos los nodes a partir de uno, incluido
+template<class T>
+void BSTree<T>::prune(Node<T>* &node)
+{
+   // Algoritmo recursivo, recorrido en postorden
+   if(node) {
+      prune(node->left); // prune left
+      prune(node->right);   // prune right
+      delete node;            // Eliminar node
+      node = NULL;
+   }
+}
+
+// insert un item en el árbol BSTree
+template<class T>
+void BSTree<T>::insert(const T data)
+{
+   Node<T> *parent = NULL;
+
+   current = root;
+   // find el item en el árbol, manteniendo un puntero al node parent
+   while(!empty(current) && data != current->item) {
+      parent = current;
+      if(data > current->item) current = current->right;
+      else if(data < current->item) current = current->left;
+   }
+
+   // Si se ha encontrado el elemento, regresar sin insertar
+   if(!empty(current)) return;
+   // Si parent es NULL, entonces el árbol estaba vacío, el nuevo node será
+   // el node root
+   if(empty(parent)) root = new Node<T>(data);
+   // Si el item es menor que el que contiene el node parent, lo insertamos
+   // en la rama lvaluierda
+   else if(data < parent->item) { parent->left = new Node<T>(data); parent->left->parentNode = parent; }
+   // Si el item es mayor que el que contiene el node parent, lo insertamos
+   // en la rama rvalecha
+   else if(data > parent->item) { parent->right = new Node<T>(data); parent->right->parentNode = parent; }
+}
+
+template<class T>
+bool BSTree<T>::insertLeft(const T data)
+{
+    if(!empty(root))
+    {
+
+        if(!empty(current->left))
+        {
+            //current = current->parentNode;
+            return false;
+        }
+        else
+        {
+            current->left = new Node<T>(data);
+            current->left->parentNode = current;
+            current = current->left;
+            return true;
+        }
+    }
+    else
+    {
+        root = new Node<T>(data);
+        current = root;
+        return true;
+    }
+}
+
+template<class T>
+bool BSTree<T>::insertRight(const T data)
+{
+    if(!empty(root))
+    {
+
+        if(!empty(current->right))
+        {
+            //current = current->parentNode;
+            return false;
+        }
+        else
+        {
+            current->right = new Node<T>(data);
+            current->right->parentNode = current;
+            current = current->right;
+            return true;
+        }
+    }
+    else
+    {
+        root = new Node<T>(data);
+        current = root;
+        return true;
+    }
+}
+
+// Eliminar un elemento de un árbol BSTree
+template<class T>
+void BSTree<T>::remove(const T data)
+{
+   Node<T> *parent = NULL;
+   Node<T> *node;
+   T aux;
+
+   current = root;
+   // Mientras sea posible que el valor esté en el árbol
+   while(!empty(current)) {
+      if(data == current->item) { // Si el valor está en el node current
+         if(isLeaf(current)) { // Y si además es un node hoja: lo borramos
+            if(parent) // Si tiene parent (no es el node root)
+               // Anulamos el puntero que le hace referencia
+               if(parent->right == current) parent->right = NULL;
+               else if(parent->left == current) parent->left = NULL;
+            delete current; // remove el node
+            current = NULL;
+            return;
+         }
+         else { // Si el valor está en el node current, pero no es hoja
+            // find node
+            parent = current;
+            // find node más left de rama rvalecha
+            if(current->right) {
+               node = current->right;
+               while(node->left) {
+                  parent = node;
+                  node = node->left;
+               }
+            }
+            // O buscar node más right de rama lvaluierda
+            else {
+               node = current->left;
+               while(node->right) {
+                  parent = node;
+                  node = node->right;
+               }
+            }
+            // Intercambiar valores de no a borrar u node encontrado
+            // y continuar, cerrando el bucle. El node encontrado no tiene
+            // por qué ser un node hoja, cerrando el bucle nos aseguramos
+            // de que sólo se eliminan nodes hoja.
+            aux = current->item;
+            current->item = node->item;
+            node->item = aux;
+            current = node;
+         }
+      }
+      else { // Todavía no hemos encontrado el valor, seguir buscándolo
+         parent = current;
+         if(data > current->item) current = current->right;
+         else if(data < current->item) current = current->left;
+      }
+   }
+}
+
+// Recorrido de árbol en inorden, aplicamos la función func, que tiene
+// el prototipo:
+// template<class T> void func(T&);
+template<class T>
+void BSTree<T>::inOrder(void (*func)(T&) , Node<T> *node, bool r)
+{
+   if(r) node = root;
+   if(node->left) inOrder(func, node->left, false);
+   func(node->item);
+   if(node->right) inOrder(func, node->right, false);
+}
+
+// Recorrido de árbol en preorden, aplicamos la función func, que tiene
+// el prototipo:
+// template<class T> void func(T&);
+template<class T>
+void BSTree<T>::preOrder(void (*func)(T&), Node<T> *node, bool r)
+{
+   if(r) node = root;
+   func(node->item);
+   if(node->left) preOrder(func, node->left, false);
+   if(node->right) preOrder(func, node->right, false);
+}
+
+// Recorrido de árbol en postorden, aplicamos la función func, que tiene
+// el prototipo:
+// template<class T> void func(T&);
+template<class T>
+void BSTree<T>::postOrder(void (*func)(T&), Node<T> *node, bool r)
+{
+   if(r) node = root;
+   if(node->left) postOrder(func, node->left, false);
+   if(node->right) postOrder(func, node->right, false);
+   func(node->item);
+}
+
+template <class T>
+void BSTree<T>::imprimeNivel(unsigned int level, bool r, Node<T>* node)
+{
+    if(r)
+        node = root;
+
+    if(level == 0)
+    {
+        cout<<node->item<<" ";
+    }
+    else
+    {
+        if(node->left)
+            imprimeNivel(level-1,false,node->left);
+        if(node->right)
+            imprimeNivel(level-1,false,node->right);
+    }
+}
+
+// find un valor en el árbol
+template<class T>
+bool BSTree<T>::find(const T data)
+{
+   current = root;
+
+   // Todavía puede aparecer, ya que quedan nodes por mirar
+   while(!empty(current)) {
+      if(data == current->item) return true; // item encontrado
+      else if(data > current->item) current = current->right; // Seguir
+      else if(data < current->item) current = current->left;
+   }
+   return false; // No está en árbol
+}
+
+// Calcular la height del node que contiene el item data
+template<class T>
+int BSTree<T>::getHeight(const T data)
+{
+   int height = 0;
+   current = root;
+
+   // Todavía puede aparecer, ya que quedan nodes por mirar
+   while(!empty(current)) {
+      if(data == current->item) return height; // item encontrado
+      else {
+         height++; // Incrementamos la height, seguimos buscando
+         if(data > current->item) current = current->right;
+         else if(data < current->item) current = current->left;
+      }
+   }
+   return -1; // No está en árbol
+}
+
+// Contar el número de nodes
+template<class T>
+const int BSTree<T>::countNodes()
+{
+   counter = 0;
+
+   auxCounter(root); // FUnción auxiliar
+   return counter;
+}
+
+// Función auxiliar para contar nodes. Función recursiva de recorrido en
+//   preorden, el proceso es aumentar el counter
+template<class T>
+void BSTree<T>::auxCounter(Node<T> *node)
+{
+   counter++;  // Otro node
+   // Continuar recorrido
+   if(node->left) auxCounter(node->left);
+   if(node->right)   auxCounter(node->right);
+}
+
+// Calcular la height del árbol, que es la height del node de mayor height.
+template<class T>
+const int BSTree<T>::treeHeight()
+{
+   height = 0;
+
+   auxHeight(root, 0); // Función auxiliar
+   return height;
+}
+
+// Función auxiliar para calcular height. Función recursiva de recorrido en
+// postorden, el proceso es currentizar la height sólo en nodes hojas de mayor
+// height de la máxima current
+template<class T>
+void BSTree<T>::auxHeight(Node<T> *node, int a)
+{
+   // Recorrido postorden
+   if(node->left) auxHeight(node->left, a+1);
+   if(node->right)   auxHeight(node->right, a+1);
+   // Proceso, si es un node hoja, y su height es mayor que la current del
+   // árbol, currentizamos la height current del árbol
+   if(isLeaf(node) && a > height) height = a;
+}
+
+#endif // _BSTREE_

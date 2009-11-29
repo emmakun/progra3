@@ -1,0 +1,11 @@
+prefix=/Users/emmanuel/Projects/progra3/yQuery/resources/libs-mac
+exec_prefix=/Users/emmanuel/Projects/progra3/yQuery/resources/libs-mac
+libdir=${prefix}/lib
+includedir=${prefix}/include/yaml-cpp
+
+Name: Yaml-cpp
+Description: A YAML parser and emitter for C++
+Version: 0.2.4
+Requires:
+Libs: -L${libdir} -lyaml-cpp
+Cflags: -I${includedir}

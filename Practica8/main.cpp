@@ -73,6 +73,8 @@ void operator >> (const YAML::Node& node, Alumno& s)
 
 int main(int argc, char *argv[])
 {
+//    argc=2;
+//    argv[1]="insert";
     if(argc > 1)
     {
         string action = argv[1];
@@ -123,6 +125,11 @@ int main(int argc, char *argv[])
                 float grade;
                 cout<<"\n\tGrade: ";
                 cin>>grade;
+
+//                string name="Emmanuel";
+//                int age = 22;
+//                unsigned int reg=123;
+//                float grade=5.5;
 
                 Alumno nuevo(name,age,reg,grade);
 

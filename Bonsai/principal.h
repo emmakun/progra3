@@ -18,6 +18,11 @@ public:
 
 private:
     Ui::Principal *ui;
+
+public slots:
+    void setWorkingDir();
+    void clear();
+    void clearAll();
 };
 
 #endif // PRINCIPAL_H

@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-11-28T18:23:33
 # -------------------------------------------------
-TARGET = yquery
+TARGET = yQuery
 TEMPLATE = app
 SOURCES += main.cpp \
     principal.cpp

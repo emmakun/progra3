@@ -38,7 +38,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="lineDir"/>
     </item>
     <item row="0" column="2">
      <widget class="QPushButton" name="browseButton">
@@ -64,7 +64,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_2"/>
+     <widget class="QLineEdit" name="lineQuery"/>
     </item>
     <item row="1" column="2">
      <widget class="QPushButton" name="execButton">
@@ -92,7 +92,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QTableView" name="tableView"/>
+        <widget class="QTableView" name="results"/>
        </item>
       </layout>
      </widget>
@@ -113,6 +113,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionClear"/>
+    <addaction name="actionClear_All"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
@@ -194,6 +195,14 @@
     <string>About</string>
    </property>
   </action>
+  <action name="actionClear_All">
+   <property name="text">
+    <string>Clear All</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear All</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -213,6 +222,22 @@
     <hint type="destinationlabel">
      <x>299</x>
      <y>246</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineQuery</sender>
+   <signal>returnPressed()</signal>
+   <receiver>execButton</receiver>
+   <slot>animateClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>371</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>522</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>

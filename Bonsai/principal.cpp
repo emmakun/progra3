@@ -26,11 +26,11 @@ void Principal::setWorkingDir()
 
 void Principal::clear()
 {
-    ui->lineQuery->clear();
+    ui->textQuery->clear();
 }
 
 void Principal::clearAll()
 {
     ui->lineDir->clear();
-    ui->lineQuery->clear();
+    ui->textQuery->clear();
 }

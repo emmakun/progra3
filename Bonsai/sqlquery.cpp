@@ -37,7 +37,9 @@ bool SqlQuery::isValid()
 
     if(
             _type == UNKNOWN ||
-            _tables.empty()
+            _tables.empty() ||
+            (_type != DELETE && _fields.isEmpty()) ||
+            ((_type == INSERT || _type == UPDATE) && _values.isEmpty())
       )
         valid = false;
 

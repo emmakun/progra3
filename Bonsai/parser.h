@@ -19,6 +19,8 @@ namespace SqlParser
     {
         QString _query;
 
+        bool hasPunct(const QString&);
+
         QueryType getType();
         QStringList getFields(QueryType);
         QStringList getTables(QueryType);

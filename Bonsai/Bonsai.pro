@@ -13,7 +13,6 @@ HEADERS += principal.h \
     SQLParser.h
 FORMS += principal.ui
 RESOURCES += resources.qrc
-macx:INCLUDEPATH += resources/libs-mac/10.5/include/yaml-cpp
-macx:LIBS += -Lresources/libs-mac/10.5/lib \
-    -lyaml-cpp
+macx:INCLUDEPATH += resources/libs-mac/10.6/include/yaml-cpp
+macx:LIBS += -Lresources/libs-mac/10.6/lib/libyaml-cpp.a
 macx:ICON = resources/images/bonsai.icns

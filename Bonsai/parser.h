@@ -4,8 +4,17 @@
 #include "sqlquery.h"
 #include <QString>
 #include <QStringList>
+
+/*
+  Namespace: SqlParser
+    Namespace that contains the classes needed to parse SQL sentences.
+ */
 namespace SqlParser
 {
+    /*
+      Class: Parser
+        This class provides the public interface for parsing SQL statements.
+     */
     class Parser
     {
         QString _query;
@@ -31,8 +40,24 @@ namespace SqlParser
         void parseValuesUpdate(QStringList&);
 
     public:
+
+        /*
+          Constructor: Parser
+            Initialize the parser.
+         */
         Parser();
+
+        /*
+          Constructor: Parser
+            Initialize the parser by providing a QString as the query to parse.
+         */
         Parser(const QString&);
+
+        /*
+          Method: parse
+            Returns a SqlQuery object that contains all the tables, fields, values and conditions
+            of the parsed query.
+         */
         SqlQuery parse();
 
         //Getters

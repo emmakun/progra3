@@ -6,6 +6,10 @@ Parser::Parser()
 {
 }
 
+/*
+  Parameters:
+    query - The QString containing the sql statement.
+ */
 Parser::Parser(const QString& query)
 {
     _query = query.simplified();
